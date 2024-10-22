@@ -3,7 +3,7 @@
  * @Email        : xuxiaokang_up@qq.com
  * @Date         : 2024-09-14 11:40:11
  * @LastEditors  : Xu Xiaokang
- * @LastEditTime : 2024-09-23 11:10:10
+ * @LastEditTime : 2024-10-22 10:33:29
  * @Filename     :
  * @Description  :
 */
@@ -37,3 +37,24 @@ myFIFO #(
   .rd_rst       (rd_rst)
 );
 //-- 实例化FIFO模块 ------------------------------------------------------------
+
+
+//++ 实例化同步FIFO ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+syncFIFO #(
+  .DATA_WIDTH (8), // 数据位宽, 可取1, 2, 3, ... , 默认为8
+  .ADDR_WIDTH (4), // 地址位宽, 可取1, 2, 3, ... , 默认为4, 对应深度2**4
+  .RAM_STYLE  ( ), // RAM类型, 可选"block", "distributed"(默认)
+  .FWFT_EN    ( )  // 首字直通特性使能, 默认为1, 表示使能首字直通
+) syncFIFO_u0 (
+  .din          (din         ),
+  .wr_en        (wr_en       ),
+  .full         (full        ),
+  .almost_full  (almost_full ),
+  .dout         (dout        ),
+  .rd_en        (rd_en       ),
+  .empty        (empty       ),
+  .almost_empty (almost_empty),
+  .clk          (clk         ),
+  .rst          (rst         )
+);
+//-- 实例化同步FIFO ------------------------------------------------------------
