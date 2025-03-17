@@ -42,3 +42,9 @@ FIFO在FPGA中应用很多，它主要有以下功能：
 ## 更多参考
 
 [Verilog功能模块——FIFO（总结） – 徐晓康的博客 (myhardware.top)](https://www.myhardware.top/verilog功能模块-fifo（总结）/)
+
+## 其它平台
+
+微信公众号：`徐晓康的博客`
+
+<img src="https://picgo-dakang.oss-cn-hangzhou.aliyuncs.com/img/%E5%BE%90%E6%99%93%E5%BA%B7%E7%9A%84%E5%8D%9A%E5%AE%A2%E5%85%AC%E4%BC%97%E5%8F%B7%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg" alt="徐晓康的博客公众号二维码" />
