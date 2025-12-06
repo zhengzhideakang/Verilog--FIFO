@@ -4,8 +4,8 @@
  * @Date         : 2023-10-09 09:43:46
  * @LastEditors  : Xu Xiaokang
  * @LastEditTime : 2024-09-23 10:50:59
- * @Filename     :
- * @Description  :
+ * @Filename     : syncFIFO.v
+ * @Description  : 同步FIFO
 */
 
 /*

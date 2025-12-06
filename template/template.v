@@ -58,3 +58,26 @@ syncFIFO #(
   .rst          (rst         )
 );
 //-- 实例化同步FIFO ------------------------------------------------------------
+
+
+//++ 实例化异步FIFO ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+asyncFIFO # (
+  .DATA_WIDTH (DATA_WIDTH),
+  .ADDR_WIDTH (ADDR_WIDTH),
+  .RAM_STYLE  (RAM_STYLE ),
+  .FWFT_EN    (FWFT_EN   )
+) asyncFIFO_inst (
+  .din          (din         ),
+  .wr_en        (wr_en       ),
+  .full         (full        ),
+  .almost_full  (almost_full ),
+  .wr_clk       (wr_clk      ),
+  .wr_rst       (wr_rst      ),
+  .dout         (dout        ),
+  .rd_en        (rd_en       ),
+  .empty        (empty       ),
+  .almost_empty (almost_empty),
+  .rd_clk       (rd_clk      ),
+  .rd_rst       (rd_rst      )
+);
+//-- 实例化异步FIFO ------------------------------------------------------------
