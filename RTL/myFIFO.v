@@ -3,7 +3,7 @@
  * @Email        : xuxiaokang_up@qq.com
  * @Date         : 2024-01-17 00:13:47
  * @LastEditors  : Xu Xiaokang
- * @LastEditTime : 2024-09-23 11:03:23
+ * @LastEditTime : 2026-03-19 00:05:15
  * @Filename     :
  * @Description  :
 */
@@ -19,9 +19,9 @@
 module myFIFO
 #(
   parameter [0 : 0] IS_ASYNC    = 0, // 1表示异步FIFO, 0(默认)表示同步FIFO
-  parameter         DIN_WIDTH   = 8, // 输入数据位宽, 可取1, 2, 3, ... , 默认为8
-  parameter         DOUT_WIDTH  = 8, // 输出数据位宽, 可取1, 2, 3, ... , 默认为8
-  parameter         WADDR_WIDTH = 4, // 写入地址位宽, 可取1, 2, 3, ... , 默认为4, 对应深度2**4
+  parameter integer DIN_WIDTH   = 8, // 输入数据位宽, 可取1, 2, 3, ... , 默认为8
+  parameter integer DOUT_WIDTH  = 8, // 输出数据位宽, 可取1, 2, 3, ... , 默认为8
+  parameter integer WADDR_WIDTH = 4, // 写入地址位宽, 可取1, 2, 3, ... , 默认为4, 对应深度2**4
   parameter RAM_STYLE = "distributed", // RAM类型, 可选"block", "distributed"(默认)
   parameter [0 : 0] FWFT_EN     = 1, // 首字直通特性使能, 默认为1, 表示使能首字直通
   parameter [0 : 0] MSB_FIFO    = 1  // 1(默认)表示高位先进先出,同Vivado FIFO一致; 0表示低位先进先出
@@ -40,6 +40,26 @@ module myFIFO
   input  wire                  rd_clk,
   input  wire                  rd_rst
 );
+
+
+//++ 参数有效性检查 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+initial begin
+  if (IS_ASYNC != 0 && IS_ASYNC != 1)
+    $error("IS_ASYNC must be 0 or 1");
+  if (DIN_WIDTH < 1)
+    $error("DIN_WIDTH must be >= 1");
+  if (DOUT_WIDTH < 1)
+    $error("DOUT_WIDTH must be >= 1");
+  if (WADDR_WIDTH < 1)
+    $error("WADDR_WIDTH must be >= 1");
+  if (RAM_STYLE != "distributed" && RAM_STYLE != "block")
+    $error("RAM_STYLE must be \"distributed\" or \"block\"");
+  if (FWFT_EN != 0 && FWFT_EN != 1)
+    $error("FWFT_EN must be 0 or 1");
+  if (MSB_FIFO != 0 && MSB_FIFO != 1)
+    $error("MSB_FIFO must be 0 or 1");
+end
+//-- 参数有效性检查 ------------------------------------------------------------
 
 
 generate

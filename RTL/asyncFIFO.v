@@ -3,7 +3,7 @@
  * @Email        : xuxiaokang_up@qq.com
  * @Date         : 2023-10-09 09:43:46
  * @LastEditors  : Xu Xiaokang
- * @LastEditTime : 2024-09-23 10:52:36
+ * @LastEditTime : 2026-03-19 00:00:23
  * @Filename     :
  * @Description  :
 */
@@ -19,8 +19,8 @@
 
 module asyncFIFO
 #(
-  parameter DATA_WIDTH = 8, // 数据位宽, 可取1, 2, 3, ... , 默认为8
-  parameter ADDR_WIDTH = 4, // 地址位宽, 可取1, 2, 3, ... , 默认为4, 对应深度2**4
+  parameter integer DATA_WIDTH = 8, // 数据位宽, 可取1, 2, 3, ... , 默认为8
+  parameter integer ADDR_WIDTH = 4, // 地址位宽, 可取1, 2, 3, ... , 默认为4, 对应深度2**4
   parameter RAM_STYLE = "distributed", // RAM类型, 可选"block", "distributed"(默认)
   parameter [0:0] FWFT_EN = 1 // 首字直通特性使能, 默认为1, 表示使能首字直通
 )(
@@ -38,6 +38,20 @@ module asyncFIFO
   input  wire                  rd_clk,
   input  wire                  rd_rst
 );
+
+
+//++ 参数有效性检查 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+initial begin
+  if (DATA_WIDTH < 1)
+    $error("DATA_WIDTH must be >= 1");
+  if (ADDR_WIDTH < 1)
+    $error("ADDR_WIDTH must be >= 1");
+  if (RAM_STYLE != "distributed" && RAM_STYLE != "block")
+    $error("RAM_STYLE must be \"distributed\" or \"block\"");
+  if (FWFT_EN != 0 && FWFT_EN != 1)
+    $error("FWFT_EN must be 0 or 1");
+end
+//-- 参数有效性检查 ------------------------------------------------------------
 
 
 //++ 生成读写指针 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
