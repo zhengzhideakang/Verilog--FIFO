@@ -3,7 +3,7 @@
  * @Email        : xuxiaokang_up@qq.com
  * @Date         : 2023-10-09 09:43:46
  * @LastEditors  : Xu Xiaokang
- * @LastEditTime : 2026-03-19 00:01:28
+ * @LastEditTime : 2026-06-23 21:40:16
  * @Filename     :
  * @Description  :
 */
@@ -17,7 +17,7 @@
 2. FIFO实际容量总是比设定容量大，差值为两个小位宽（读/写）数据，不影响功能
 3. 复位均为高电平复位，与Vivado中的FIFO IP核保持一致
 4. 复位为异步复位，写复位和读复位可以共用一个信号，也可以分开
-5. DIN_WIDTH与DOUT_WIDTH的倍数关系必须是2的n次方，如2倍、4倍、8倍，不能是3倍、6倍
+5. DIN_WIDTH与DOUT_WIDTH的倍数关系可以是1, 2, 3, ...
 6. FIFO深度通过WADDR_WIDTH来设置，所以FIFO的深度必然是2的指数，如8、16、32等
 7. WADDR_WIDTH必须≥2，且RADDR_WIDTH =  WADDR_WIDTH + log2(DIN_WIDTH / DOUT_WIDTH)也必须≥2
     一种极限情况，DIN_WIDTH = 4，DOUT_WIDTH=16，WADDR_WIDTH=4，RADDR_WIDTH =5+log2(4/16)=2
@@ -56,6 +56,10 @@ initial begin
     $error("DIN_WIDTH must be >= 1");
   if (DOUT_WIDTH < 1)
     $error("DOUT_WIDTH must be >= 1");
+  if (DOUT_WIDTH > DIN_WIDTH && DOUT_WIDTH % DIN_WIDTH != 0)
+    $error("DOUT_WIDTH must be an integer multiple of DIN_WIDTH");
+  if (DIN_WIDTH > DOUT_WIDTH && DIN_WIDTH % DOUT_WIDTH != 0)
+    $error("DIN_WIDTH must be an integer multiple of DOUT_WIDTH");
   if (WADDR_WIDTH < 1)
     $error("WADDR_WIDTH must be >= 1");
   if (RAM_STYLE != "distributed" && RAM_STYLE != "block")
@@ -158,7 +162,10 @@ generate
       if (rst)
         wdata_rd_en_cnt <= 'd0;
       else if (wdata_rd_en)
-        wdata_rd_en_cnt <= wdata_rd_en_cnt + 1'b1;
+        if (wdata_rd_en_cnt == WDATA_RD_EN_CNT_MAX)
+          wdata_rd_en_cnt <= 'd0;          // 满值归零
+        else
+          wdata_rd_en_cnt <= wdata_rd_en_cnt + 1'b1;
       else
         wdata_rd_en_cnt <= wdata_rd_en_cnt;
     end
@@ -237,7 +244,10 @@ generate
       if (rst)
         rdata_wr_en_cnt <= 'd0;
       else if (rdata_wr_en)
-        rdata_wr_en_cnt <= rdata_wr_en_cnt + 1'b1;
+        if (rdata_wr_en_cnt == RDATA_WR_EN_CNT_MAX)
+          rdata_wr_en_cnt <= 'd0;          // 满值归零
+        else
+          rdata_wr_en_cnt <= rdata_wr_en_cnt + 1'b1;
       else
         rdata_wr_en_cnt <= rdata_wr_en_cnt;
     end
