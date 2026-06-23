@@ -3,7 +3,7 @@
  * @Email        : xuxiaokang_up@qq.com
  * @Date         : 2023-10-09 09:43:46
  * @LastEditors  : Xu Xiaokang
- * @LastEditTime : 2024-09-23 10:55:29
+ * @LastEditTime : 2026-06-23 20:57:52
  * @Filename     :
  * @Description  :
 */
@@ -186,7 +186,10 @@ else if (DOUT_WIDTH > DIN_WIDTH) begin //~ 如果读位宽大于写位宽，则�
     if (rst)
       wdata_rd_en_cnt <= 'd0;
     else if (wdata_rd_en)
-      wdata_rd_en_cnt <= wdata_rd_en_cnt + 1'b1;
+      if (wdata_rd_en_cnt == WDATA_RD_EN_CNT_MAX)
+        wdata_rd_en_cnt <= 'd0;
+      else
+        wdata_rd_en_cnt <= wdata_rd_en_cnt + 1'b1;
     else
       wdata_rd_en_cnt <= wdata_rd_en_cnt;
   end
@@ -243,13 +246,16 @@ else begin //~ 如果读位宽小于写位宽，则需要分解数据，写入�
   assign almost_empty = (wdata_empty && rdata_almost_empty) || empty;
 
   // 先写入写数据的高位，再写入低位，当写入到最低位时，读取写入侧FIFO
-  localparam RDATA_WR_EN_CNT_MAX = DIN_WIDTH/ DOUT_WIDTH - 1;
+  localparam RDATA_WR_EN_CNT_MAX = DIN_WIDTH / DOUT_WIDTH - 1;
   reg [$clog2(RDATA_WR_EN_CNT_MAX+1)-1 : 0] rdata_wr_en_cnt;
   always @(posedge clk or posedge rst) begin
     if (rst)
       rdata_wr_en_cnt <= 'd0;
     else if (rdata_wr_en)
-      rdata_wr_en_cnt <= rdata_wr_en_cnt + 1'b1;
+      if (rdata_wr_en_cnt == RDATA_WR_EN_CNT_MAX)
+        rdata_wr_en_cnt <= 'd0;          // 计满归零
+      else
+        rdata_wr_en_cnt <= rdata_wr_en_cnt + 1'b1;
     else
       rdata_wr_en_cnt <= rdata_wr_en_cnt;
   end
